@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href='css/main.css'>
+		<title> аналог приложения Spendee  </title>
+		<script src='JS/react.js'></script>
+		<script src='JS/react-dom.js'></script>
+		<script src='JS/babel.min.js'></script>
+	</head>
+	<body>
+		<div id="program"></div>
+
+		<script type="text/babel">
+
+			class Task extends React.Component {
+				constructor(props) {
+					super(props);
+					this.state = {edit: false};				
+					this.save = this.save.bind(this);
+					this.edit = this.edit.bind(this);
+					this.remove = this.remove.bind(this);
+				}
+				edit(){
+					this.setState ({edit: true})
+				}
+				remove(){
+					this.props.deleteBlock (this.props.index);
+				}
+				save(){
+					
+					let value = this.refs.newTxt.value;
+					this.props.update (this.refs.newTxt.value, this.props.index);
+					this.setState ({edit: false})
+					
+					//alert(this.refs.newDate);
+				}
+				rendNorm(){
+					return (					
+						<div className="box">
+						<div className="container">
+							<div><input title="Сумма операции" type="number" /></div>
+							<div><input title="Дата операции" className="dateTasks" type="date" name="calendar" /></div>
+							<select className="kategory">
+								<option className="kategory">Ком услуги</option>
+							   <option className="kategory">{this.props.kategory}</option>
+							</select>
+						</div>
+						<div className="text">{this.props.osnText}</div>
+						<button onClick={this.edit} className="btn light">Редактировать</button>
+						<button onClick={this.remove} className="btn red">Удалить</button>
+						</div>						
+					);
+				}
+				rendEdit(){
+					return (
+						<div className="box">
+						<textarea ref="newTxt" defaultValue={this.props.osnText}></textarea>
+						<button onClick={this.save} className="btn success">Сохранить</button>
+						</div>
+					);
+				}
+				render(){
+					if (this.state.edit){
+						return this.rendEdit();
+					} else {
+						return this.rendNorm();
+					}
+				}
+			}
+			
+			class Field extends React.Component {
+				constructor(props) {
+					super(props);
+					this.state = {tasks: ['Комментарий','Комментарий1'],
+						dateTasks: ['01/10/2017','20/06/2017'],
+						Kategories: ['Авто','Магазин']
+					};
+					this.render = this.render.bind(this);
+					this.deleteBlock = this.deleteBlock.bind(this);
+					this.updateText = this.updateText.bind(this);
+					this.add = this.add.bind(this);					
+				}
+				add(text){
+					let arr = this.state.tasks;
+					arr.push (text);
+					this.setState ({tasks: arr});
+					
+					/*let dArr = this.state.dateTasks;
+					dArr.push (text);
+					this.setState ({dateTasks: dArr});*/
+				}
+				deleteBlock(i){
+					let arr = this.state.tasks;
+					arr.splice (i, 1);
+					this.setState ({tasks: arr});
+					
+					/*let dArr = this.state.dateTasks;
+					dArr.splice (i, 1);
+					this.setState ({dateTasks: dArr});*/
+				}
+				updateText(text,i){
+					let arr =  this.state.tasks;
+					arr[i] = text;
+					this.setState ({tasks: arr});
+					
+					/*let dArr =  this.state.dateTasks;
+					dArr[i] = this.state.dateTasks[i];
+					this.setState ({dateTasks: dArr});*/
+				}
+				render(){
+					return(			
+						<div className="field">
+							<button onClick={this.add.bind (null, '')} className="btn new">Добавить</button>	
+							{
+								this.state.tasks.map((item,i) => {
+									return(											
+										<Task key={i} index={i} update={this.updateText} deleteBlock={this.deleteBlock}
+											osnText={item}
+											//dateTasks={this.state.dateTasks[i]}
+											kategory={this.state.Kategories}
+										/>
+									)
+								})
+							}
+						</div>
+					)
+				}
+			};
+			
+			const app = document.getElementById("program");
+			
+			ReactDOM.render (<Field />, app);
+		</script>
+	</body>
+</html>
