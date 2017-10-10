@@ -22,28 +22,30 @@
 					this.remove = this.remove.bind(this);
 				}
 				edit(){
-					this.setState ({edit: true})
+					this.setState ({edit: true});
 				}
 				remove(){
 					this.props.deleteBlock (this.props.index);
 				}
 				save(){
 					
-					let value = this.refs.newTxt.value;
-					this.props.update (this.refs.newTxt.value, this.props.index);
-					this.setState ({edit: false})
-					
-					//alert(this.refs.newDate);
+					this.props.update (this.refs.newTxt.value, this.props.index, this.refs.newTxte.value, this.refs.date.value);				
+					this.setState ({edit: false});
 				}
 				rendNorm(){
-					return (					
+					return (
 						<div className="box">
 						<div className="container">
-							<div><input title="Сумма операции" type="number" /></div>
-							<div><input title="Дата операции" className="dateTasks" type="date" name="calendar" /></div>
-							<select className="kategory">
-								<option className="kategory">Ком услуги</option>
-							   <option className="kategory">{this.props.kategory}</option>
+							<div title="Сумма операции" type="number" >{this.props.summaOperatsii}</div>							
+							<div title="Дата операции" >{this.props.date}</div>
+							<select className="categories">
+								{
+									this.props.category.map((item,i) => {
+										return(
+											<option key={i} className="category" value={i}>{item}</option>)}
+											)
+								}
+								
 							</select>
 						</div>
 						<div className="text">{this.props.osnText}</div>
@@ -56,6 +58,8 @@
 					return (
 						<div className="box">
 						<textarea ref="newTxt" defaultValue={this.props.osnText}></textarea>
+						<input ref="newTxte" title="Сумма операции" type="number" defaultValue={this.props.summaOperatsii}></input>
+						<input ref="date" title="Дата операции" className="dateTasks" type="date" name="calendar" />
 						<button onClick={this.save} className="btn success">Сохранить</button>
 						</div>
 					);
@@ -74,51 +78,73 @@
 					super(props);
 					this.state = {tasks: ['Комментарий','Комментарий1'],
 						dateTasks: ['01/10/2017','20/06/2017'],
-						Kategories: ['Авто','Магазин']
+						categories: ['Авто ','Магазин', 'Комуналка'],
+						summaOperatsii: [10,15],
+						date: [(20170101), (20170606)]
 					};
 					this.render = this.render.bind(this);
 					this.deleteBlock = this.deleteBlock.bind(this);
 					this.updateText = this.updateText.bind(this);
-					this.add = this.add.bind(this);					
+					this.add = this.add.bind(this);
+					this.addCategory = this.addCategory.bind(this);
 				}
 				add(text){
 					let arr = this.state.tasks;
 					arr.push (text);
 					this.setState ({tasks: arr});
-					
-					/*let dArr = this.state.dateTasks;
-					dArr.push (text);
-					this.setState ({dateTasks: dArr});*/
 				}
+				addCategory(){
+					
+					if (this.refs.category.value != ""){
+						let categoryArr = this.state.categories;
+						categoryArr.push (this.refs.category.value);
+						this.setState ({categories: categoryArr});
+						this.refs.category.value = ""
+					}
+				}
+				
 				deleteBlock(i){
 					let arr = this.state.tasks;
 					arr.splice (i, 1);
 					this.setState ({tasks: arr});
 					
-					/*let dArr = this.state.dateTasks;
-					dArr.splice (i, 1);
-					this.setState ({dateTasks: dArr});*/
+					let summaArr = this.state.summaOperatsii;
+					summaArr.splice (i, 1);
+					this.setState ({summaOperatsii: summaArr});
+					
+					let dateArr = this.state.date;
+					dateArr.splice (i, 1);
+					this.setState ({date: dateArr});
 				}
-				updateText(text,i){
+				updateText(text,i,summaOperatsii, date){
 					let arr =  this.state.tasks;
 					arr[i] = text;
 					this.setState ({tasks: arr});
 					
-					/*let dArr =  this.state.dateTasks;
-					dArr[i] = this.state.dateTasks[i];
-					this.setState ({dateTasks: dArr});*/
+					let summaArr =  this.state.summaOperatsii;
+					summaArr[i] = summaOperatsii;
+					this.setState ({summaOperatsii: summaArr});
+					
+					let dateArr =  this.state.date;
+					dateArr[i] = date;
+					this.setState ({date: dateArr});
 				}
 				render(){
 					return(			
 						<div className="field">
+							<div className="containerCategory">
+								<textarea ref="category" title="Введите категорию" type="text" className="category" defaultValue=""></textarea><div/>
+								<button onClick={this.addCategory.bind (null, '')} className="btn success">Добавить категорию</button>
+							</div>
 							<button onClick={this.add.bind (null, '')} className="btn new">Добавить</button>	
 							{
 								this.state.tasks.map((item,i) => {
-									return(											
+									return(
 										<Task key={i} index={i} update={this.updateText} deleteBlock={this.deleteBlock}
 											osnText={item}
-											//dateTasks={this.state.dateTasks[i]}
-											kategory={this.state.Kategories}
+											category={this.state.categories}
+											summaOperatsii={this.state.summaOperatsii[i]}
+											date={this.state.date[i]}
 										/>
 									)
 								})

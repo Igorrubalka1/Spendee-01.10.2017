@@ -140,3 +140,22 @@ input:focus {
 	color: black;
 	height: 10px;
 }
+
+.containerCategory {
+	float: left;
+	width: 1000px;
+	height: 90px;
+}
+
+textarea.category {
+	width: 200px;
+	height: 10px;
+}
+
+button.btn.add {
+	width: 75px;
+	height: 40px;
+	padding: 1px;
+	border: 2px solid #b6821a;
+	background-color #1f4eaf;
+}
