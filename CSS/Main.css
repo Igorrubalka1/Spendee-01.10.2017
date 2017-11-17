@@ -1,4 +1,4 @@
-body {
+body.index {
   background-color: #e1e388;
 }
 
@@ -93,6 +93,12 @@ textarea:focus {
   border: 1.5px solid #6d79cd;
 }
 
+textarea.litle {
+  width: 400px;
+  height: 45px;
+  font-size: 15px;
+   margin: 0 0 700px;
+}
 input {
   color: black;
   background-color: #fafafa;
@@ -139,4 +145,23 @@ input:focus {
 	width: 20%;
 	color: black;
 	height: 10px;
+}
+
+.containerCategory {
+	float: left;
+	width: 1000px;
+	height: 90px;
+}
+
+textarea.category {
+	width: 200px;
+	height: 10px;
+}
+
+button.btn.add {
+	width: 75px;
+	height: 40px;
+	padding: 1px;
+	border: 2px solid #b6821a;
+	background-color #1f4eaf;
 }
